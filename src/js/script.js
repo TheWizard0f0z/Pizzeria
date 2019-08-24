@@ -90,7 +90,7 @@
       console.log('clickedTrigger:', clickableTrigger);
 
       /* START: click event listener to trigger */
-      clickableTrigger.addEventListener('click', function() {
+      clickableTrigger.addEventListener('click', function(event) {
         console.log('clicked');
 
         /* prevent default action for event */
@@ -101,7 +101,7 @@
         console.log('thisProduct:', thisProduct);
 
         /* find all active products */
-        const allActiveProducts = thisProduct.element.querySelectorAll(select.all.menuProductsActive);
+        const allActiveProducts = document.querySelectorAll(select.all.menuProductsActive);
 
         /* START LOOP: for each active product */
         for (let activeProduct of allActiveProducts) {
