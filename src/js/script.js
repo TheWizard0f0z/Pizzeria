@@ -162,6 +162,7 @@
         for (let optionId in param.options) {
           /* save the element in param.options with key optionId as const option */
           const option = param.options[optionId];
+          //console.log('option:', option);
 
           const optionSelected = formData.hasOwnProperty(paramId) && formData[paramId].indexOf(optionId) > -1;
           /* START IF: if option is selected and option is not default */
@@ -176,6 +177,18 @@
             price = price - option.price;
           }
           /* END ELSE IF: if option is not selected and option is default */
+
+          const images = thisProduct.imageWrapper.querySelectorAll('.' + paramId + '-' + optionId);
+
+          if (optionSelected) {
+            for (let image of images) {
+              image.classList.add(classNames.menuProduct.imageVisible);
+            }
+          } else {
+            for (let image of images) {
+              image.remove(classNames.menuProduct.imageVisible);
+            }
+          }
         }
         /* END LOOP: for each optionId in param.options */
       }
