@@ -186,7 +186,7 @@
             }
           } else {
             for (let image of images) {
-              image.remove(classNames.menuProduct.imageVisible);
+              image.classList.remove(classNames.menuProduct.imageVisible);
             }
           }
         }
