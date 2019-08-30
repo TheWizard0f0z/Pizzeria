@@ -43,7 +43,9 @@ dataSource.products = {
       '<img class="active toppings-redPeppers" src="images/pizza/red-peppers.svg">',
       '<img class="active toppings-greenPeppers" src="images/pizza/green-peppers.svg">',
       '<img class="active toppings-mushrooms" src="images/pizza/mushrooms.svg">',
-      '<img class="active toppings-basil" src="images/pizza/basil.svg">'
+      '<img class="active toppings-basil" src="images/pizza/basil.svg">',
+      '<img class="active toppings-bacon" src="images/pizza/bacon.svg">',
+      '<img class="active toppings-corn" src="images/pizza/corn.svg">'
     ],
     params: {
       sauce: {
@@ -63,7 +65,9 @@ dataSource.products = {
           greenPeppers: { label: 'Green peppers', price: 2, default: true },
           mushrooms: { label: 'Mushrooms', price: 2, default: true },
           basil: { label: 'Fresh basil', price: 2, default: true },
-          salami: { label: 'Salami', price: 3 }
+          salami: { label: 'Salami', price: 3 },
+          bacon: { label: 'Bacon', price: 3 },
+          corn: { label: 'Corn', price: 2 }
         }
       },
       crust: {
@@ -92,7 +96,8 @@ dataSource.products = {
       '<img class="active ingredients-feta" src="images/salad/feta.svg" style="z-index: 4;">',
       '<img class="active ingredients-herbs" src="images/salad/herbs.svg" style="z-index: 5;">',
       '<img class="active ingredients-cheese" src="images/salad/cheese.svg" style="z-index: 6;">',
-      '<img class="active ingredients-pepper" src="images/salad/black-pepper.svg" style="z-index: 7;">'
+      '<img class="active ingredients-pepper" src="images/salad/black-pepper.svg" style="z-index: 7;">',
+      '<img class="active ingredients-pineapple" src="images/salad/pineapple.svg" style="z-index: 8;">'
     ],
     params: {
       ingredients: {
@@ -105,7 +110,8 @@ dataSource.products = {
           feta: { label: 'Feta cheese', price: 1 },
           cheese: { label: 'Cheese', price: 1 },
           herbs: { label: 'Fresh herbs', price: 1, default: true },
-          pepper: { label: 'Black pepper', price: 1 }
+          pepper: { label: 'Black pepper', price: 1 },
+          pineapple: { label: 'Pineapple', price: 1 }
         }
       }
     }
