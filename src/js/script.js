@@ -6,16 +6,16 @@
   const select = {
     templateOf: {
       menuProduct: '#template-menu-product',
-      cartProduct: '#template-cart-product',
+      cartProduct: '#template-cart-product'
     },
     containerOf: {
       menu: '#product-list',
-      cart: '#cart',
+      cart: '#cart'
     },
     all: {
       menuProducts: '#product-list > .product',
       menuProductsActive: '#product-list > .product.active',
-      formInputs: 'input, select',
+      formInputs: 'input, select'
     },
     menuProduct: {
       clickable: '.product__header',
@@ -23,14 +23,14 @@
       priceElem: '.product__total-price .price',
       imageWrapper: '.product__images',
       amountWidget: '.widget-amount',
-      cartButton: '[href="#add-to-cart"]',
+      cartButton: '[href="#add-to-cart"]'
     },
     widgets: {
       amount: {
         input: 'input.amount',
         linkDecrease: 'a[href="#less"]',
-        linkIncrease: 'a[href="#more"]',
-      },
+        linkIncrease: 'a[href="#more"]'
+      }
     },
     cart: {
       productList: '.cart__order-summary',
@@ -42,40 +42,40 @@
       form: '.cart__order',
       formSubmit: '.cart__order [type="submit"]',
       phone: '[name="phone"]',
-      address: '[name="address"]',
+      address: '[name="address"]'
     },
     cartProduct: {
       amountWidget: '.widget-amount',
       price: '.cart__product-price',
       edit: '[href="#edit"]',
-      remove: '[href="#remove"]',
-    },
+      remove: '[href="#remove"]'
+    }
   };
 
   const classNames = {
     menuProduct: {
       wrapperActive: 'active',
-      imageVisible: 'active',
+      imageVisible: 'active'
     },
     cart: {
-      wrapperActive: 'active',
-    },
+      wrapperActive: 'active'
+    }
   };
 
   const settings = {
     amountWidget: {
       defaultValue: 1,
       defaultMin: 1,
-      defaultMax: 9,
+      defaultMax: 9
     },
     cart: {
-      defaultDeliveryFee: 20,
-    },
+      defaultDeliveryFee: 20
+    }
   };
 
   const templates = {
     menuProduct: Handlebars.compile(document.querySelector(select.templateOf.menuProduct).innerHTML),
-    cartProduct: Handlebars.compile(document.querySelector(select.templateOf.cartProduct).innerHTML),
+    cartProduct: Handlebars.compile(document.querySelector(select.templateOf.cartProduct).innerHTML)
   };
 
   class Product {
@@ -91,8 +91,6 @@
       thisProduct.initOrderForm();
       thisProduct.initAmountWidget();
       thisProduct.processOrder();
-
-      console.log('new Product:', thisProduct);
     }
 
     renderInMenu() {
@@ -248,9 +246,6 @@
       thisWidget.getElements(element);
       thisWidget.setValue(thisWidget.input.value);
       thisWidget.initActions();
-
-      console.log('AmountWidget:', thisWidget);
-      console.log('constructor arguments:', element);
     }
 
     getElements(element) {
@@ -319,11 +314,11 @@
 
     init: function() {
       const thisApp = this;
-      console.log('*** App starting ***');
-      console.log('thisApp:', thisApp);
-      console.log('classNames:', classNames);
-      console.log('settings:', settings);
-      console.log('templates:', templates);
+      //console.log('*** App starting ***');
+      //console.log('thisApp:', thisApp);
+      //console.log('classNames:', classNames);
+      //console.log('settings:', settings);
+      //console.log('templates:', templates);
 
       thisApp.initData();
 
