@@ -380,8 +380,8 @@
     update() {
       const thisCart = this;
 
-      select.cart.totalNumber === 0;
-      select.cart.subtotalPrice === 0;
+      thisCart.totalNumber = 0;
+      thisCart.subtotalPrice = 0;
 
       for (let product of thisCart.products) {
         thisCart.subtotalPrice += product.price;
