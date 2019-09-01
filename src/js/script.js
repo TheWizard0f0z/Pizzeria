@@ -237,8 +237,6 @@
 
       /* set the contents of thisProduct.priceElem to be the value of variable price */
       thisProduct.priceElem.innerHTML = thisProduct.price;
-
-      //console.log('params', thisProduct.params);
     }
 
     initAmountWidget() {
@@ -330,8 +328,6 @@
 
       thisCart.getElements(element);
       thisCart.initActions();
-
-      //console.log('new Cart:', thisCart);
     }
 
     getElements(element) {
@@ -343,7 +339,7 @@
 
       thisCart.dom.toggleTrigger = thisCart.dom.wrapper.querySelector(select.cart.toggleTrigger);
 
-      thisCart.dom.productList - thisCart.dom.wrapper.querySelector(select.cart.productList);
+      thisCart.dom.productList = thisCart.dom.wrapper.querySelector(select.cart.productList);
 
       thisCart.renderTotalsKeys = ['totalNumber', 'totalPrice', 'subtotalPrice', 'deliveryFee'];
 
@@ -367,22 +363,16 @@
     add(menuProduct) {
       const thisCart = this;
 
-      //console.log('adding product', menuProduct);
-
       /* generate HTML based on template */
       const generatedHTML = templates.cartProduct(menuProduct);
 
       /*create element using utilis.createElementFromHTML */
       const generatedDOM = utils.createDOMFromHTML(generatedHTML);
 
-      /* find menu container */
-      const cartContainer = document.querySelector(select.containerOf.cart);
-
       /* add element to menu */
-      cartContainer.appendChild(generatedDOM);
+      thisCart.dom.productList.appendChild(generatedDOM);
 
       thisCart.products.push(new CartProduct(menuProduct, generatedDOM));
-      //console.log('thisCart.products', thisCart.products);
 
       thisCart.update();
     }
@@ -425,9 +415,6 @@
 
       thisCartProduct.getElements(element);
       thisCartProduct.initAmountWidget();
-
-      //console.log('new CartProduct', thisCartProduct);
-      //console.log('productData', menuProduct);
     }
 
     getElements(element) {
