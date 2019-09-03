@@ -410,7 +410,7 @@
 
       const index = thisCart.products.indexOf(cartProduct);
 
-      thisCart.products.splice(index);
+      thisCart.products.splice(index, 1);
 
       cartProduct.dom.wrapper.remove();
 
