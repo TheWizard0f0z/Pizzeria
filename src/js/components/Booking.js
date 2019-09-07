@@ -1,6 +1,7 @@
 import { templates, select } from '../settings.js';
 import AmountWidget from './AmountWidget.js';
 import DatePicker from './DatePicker.js';
+import HourPicker from './HourPicker.js';
 
 class Booking {
   constructor(bookingElem) {
@@ -33,6 +34,9 @@ class Booking {
 
     /* save a single element found in the wrapper and matching the select.widgets.datePicker.wrapper selector in the thisBooking.dom.datePicker property */
     thisBooking.dom.datePicker = thisBooking.dom.wrapper.querySelector(select.widgets.datePicker.wrapper);
+
+    /* save a single element found in the wrapper and matching the select.widgets.hourPicker.wrapper selector in the thisBooking.dom.hourPicker property */
+    thisBooking.dom.hourPicker = thisBooking.dom.wrapper.querySelector(select.widgets.hourPicker.wrapper);
   }
 
   initWidgets() {
@@ -43,6 +47,8 @@ class Booking {
     thisBooking.hoursAmount = new AmountWidget(thisBooking.dom.hoursAmount);
 
     thisBooking.datePicker = new DatePicker(thisBooking.dom.datePicker);
+
+    thisBooking.hourPicker = new HourPicker(thisBooking.dom.hourPicker);
   }
 }
 

@@ -1,10 +1,12 @@
+/* global flatpickr */
+
 import BaseWidget from './BaseWidget.js';
 import { utils } from '../utils.js';
 import { settings, select } from '../settings.js';
 
 class DatePicker extends BaseWidget {
-  constructor(value) {
-    super(value, utils.dateToStr(new Date()));
+  constructor(wrapper) {
+    super(wrapper, utils.dateToStr(new Date()));
 
     const thisWidget = this;
 
@@ -22,7 +24,6 @@ class DatePicker extends BaseWidget {
     /* get the date shifted by some days */
     thisWidget.maxDate = utils.addDays(thisWidget.minDate, settings.datePicker.maxDaysInFuture);
 
-    // eslint-disable-next-line no-undef
     flatpickr(thisWidget.dom.input, {
       defaultDate: thisWidget.minDate,
       minDate: thisWidget.minDate,
