@@ -11,6 +11,7 @@ class Booking {
     thisBooking.render(bookingElem);
     thisBooking.initWidgets();
     thisBooking.getData();
+    thisBooking.makeReservation();
   }
 
   getData() {
@@ -119,6 +120,38 @@ class Booking {
         table.classList.add(classNames.booking.tableBooked);
       } else {
         table.classList.remove(classNames.booking.tableBooked);
+      }
+    }
+  }
+
+  makeReservation() {
+    const thisBooking = this;
+
+    /* find all clickable tables (element that should react to clicking) */
+    const allTables = thisBooking.dom.tables;
+    console.log('allTables:', allTables);
+
+    /* START LOOP: for each clickable single table */
+    for (let singleTable of allTables) {
+      /* START: click event listener to single table */
+      singleTable.addEventListener('click', function(event) {
+        event.preventDefault();
+
+        /* toggle reservation class on single table */
+        singleTable.classList.toggle(classNames.booking.tableReservation);
+      });
+    }
+
+    /* find all reserved tables */
+    const allReservedTables = document.querySelectorAll(select.booking.tablesReserved);
+    console.log('allReservedTables:', allReservedTables);
+
+    /* START LOOP: for each reserved tables */
+    for (let reservedTable of allReservedTables) {
+      /* START: if reserved table.... */
+      if (reservedTable) {
+        /* remove class reservation for the reserved table */
+        reservedTable.classList.remove(classNames.booking.tableReservation);
       }
     }
   }
