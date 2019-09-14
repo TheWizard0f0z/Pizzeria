@@ -129,7 +129,10 @@ class Booking {
 
     /* find all clickable tables (element that should react to clicking) */
     const allTables = thisBooking.dom.tables;
-    console.log('allTables:', allTables);
+    // console.log('allTables:', allTables);
+
+    let reservedTable = '';
+    // console.log('reservedTable:', reservedTable);
 
     /* START LOOP: for each clickable single table */
     for (let singleTable of allTables) {
@@ -139,21 +142,42 @@ class Booking {
 
         /* toggle reservation class on single table */
         singleTable.classList.toggle(classNames.booking.tableReservation);
+
+        /* find all tables with class 'reservation' */
+        const allReservedTables = document.querySelectorAll(select.booking.tablesReserved);
+
+        /* START LOOP: for each single reserved table */
+        for (let singleReservedTable of allReservedTables) {
+          /* START: if single reserved table isn't single table NOT reserved */
+          if (singleReservedTable !== singleTable) {
+            /* remove class reservation for single reserved table */
+            singleReservedTable.classList.remove(classNames.booking.tableReservation);
+          }
+        }
+        /* find attribute for reserved table */
+        reservedTable = singleTable.getAttribute('data-table');
+
+        thisBooking.singleTable = reservedTable;
       });
     }
 
-    /* find all reserved tables */
-    const allReservedTables = document.querySelectorAll(select.booking.tablesReserved);
-    console.log('allReservedTables:', allReservedTables);
-
-    /* START LOOP: for each reserved tables */
-    for (let reservedTable of allReservedTables) {
-      /* START: if reserved table.... */
-      if (reservedTable) {
-        /* remove class reservation for the reserved table */
-        reservedTable.classList.remove(classNames.booking.tableReservation);
+    /* input event listener to hourpicker input */
+    thisBooking.hourPicker.dom.input.addEventListener('input', function() {
+      /* START: if number of arguments currently passed to the function > 0 */
+      if (reservedTable.length > 0) {
+        /* remove class reservation for table */
+        allTables[reservedTable - 1].classList.remove(classNames.booking.tableReservation);
       }
-    }
+    });
+
+    /* click event listener to datepicker input */
+    thisBooking.datePicker.dom.input.addEventListener('click', function() {
+      /* START: if datepicker input get active class */
+      if (thisBooking.datePicker.dom.input.classList.contains('active')) {
+        /* remove class reservation for table */
+        allTables[reservedTable - 1].classList.remove(classNames.booking.tableReservation);
+      }
+    });
   }
 
   render(bookingElem) {
