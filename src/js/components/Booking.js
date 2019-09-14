@@ -130,16 +130,18 @@ class Booking {
     /* find all clickable tables (element that should react to clicking) */
     const allTables = thisBooking.dom.tables;
 
-    let reservedTable = '';
-
     /* START LOOP: for each clickable single table */
     for (let singleTable of allTables) {
       /* START: click event listener to single table */
-      singleTable.addEventListener('click', function() {
+      singleTable.addEventListener('click', function(event) {
+        event.preventDefault();
+
         /* START: if single table don't have booked class */
         if (!singleTable.classList.contains(classNames.booking.tableBooked)) {
           /* toggle reservation class on single table */
           singleTable.classList.toggle(classNames.booking.tableReservation);
+        } else {
+          alert('This table is already booked!');
         }
 
         /* find all tables with class 'reservation' */
@@ -153,30 +155,16 @@ class Booking {
             singleReservedTable.classList.remove(classNames.booking.tableReservation);
           }
         }
-        /* find attribute for reserved table */
-        reservedTable = singleTable.getAttribute('data-table');
 
-        thisBooking.singleTable = reservedTable;
+        thisBooking.dom.hourPicker.addEventListener('updated', function() {
+          singleTable.classList.remove(classNames.booking.tableReservation);
+        });
+
+        thisBooking.dom.datePicker.addEventListener('change', function() {
+          singleTable.classList.remove(classNames.booking.tableReservation);
+        });
       });
     }
-
-    /* input event listener to hourpicker input */
-    thisBooking.hourPicker.dom.input.addEventListener('input', function() {
-      /* START: if number of arguments currently passed to the function > 0 */
-      if (reservedTable.length > 0) {
-        /* remove class reservation for table */
-        allTables[reservedTable - 1].classList.remove(classNames.booking.tableReservation);
-      }
-    });
-
-    /* click event listener to datepicker input */
-    thisBooking.datePicker.dom.input.addEventListener('click', function() {
-      /* START: if datepicker input get active class */
-      if (thisBooking.datePicker.dom.input.classList.contains('active')) {
-        /* remove class reservation for table */
-        allTables[reservedTable - 1].classList.remove(classNames.booking.tableReservation);
-      }
-    });
   }
 
   render(bookingElem) {
