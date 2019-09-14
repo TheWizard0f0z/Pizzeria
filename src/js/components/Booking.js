@@ -129,19 +129,18 @@ class Booking {
 
     /* find all clickable tables (element that should react to clicking) */
     const allTables = thisBooking.dom.tables;
-    // console.log('allTables:', allTables);
 
     let reservedTable = '';
-    // console.log('reservedTable:', reservedTable);
 
     /* START LOOP: for each clickable single table */
     for (let singleTable of allTables) {
       /* START: click event listener to single table */
-      singleTable.addEventListener('click', function(event) {
-        event.preventDefault();
-
-        /* toggle reservation class on single table */
-        singleTable.classList.toggle(classNames.booking.tableReservation);
+      singleTable.addEventListener('click', function() {
+        /* START: if single table don't have booked class */
+        if (!singleTable.classList.contains(classNames.booking.tableBooked)) {
+          /* toggle reservation class on single table */
+          singleTable.classList.toggle(classNames.booking.tableReservation);
+        }
 
         /* find all tables with class 'reservation' */
         const allReservedTables = document.querySelectorAll(select.booking.tablesReserved);
