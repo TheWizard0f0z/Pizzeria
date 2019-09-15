@@ -56,11 +56,11 @@ class Booking {
 
     thisBooking.booked = {};
 
-    for (let item of eventsCurrent) {
+    for (let item of bookings) {
       thisBooking.makeBooked(item.date, item.hour, item.duration, item.table);
     }
 
-    for (let item of bookings) {
+    for (let item of eventsCurrent) {
       thisBooking.makeBooked(item.date, item.hour, item.duration, item.table);
     }
 
@@ -116,7 +116,7 @@ class Booking {
         tableId = parseInt(tableId);
       }
 
-      if (!allAvailable && thisBooking.booked[thisBooking.date][thisBooking.hour].includes(tableId) > -1) {
+      if (!allAvailable && thisBooking.booked[thisBooking.date][thisBooking.hour].includes(tableId)) {
         table.classList.add(classNames.booking.tableBooked);
       } else {
         table.classList.remove(classNames.booking.tableBooked);
@@ -131,16 +131,16 @@ class Booking {
     const allTables = thisBooking.dom.tables;
 
     /* START LOOP: for each clickable single table */
-    for (let singleTable of allTables) {
+    for (let table of allTables) {
       /* START: click event listener to single table */
-      singleTable.addEventListener('click', function(event) {
+      table.addEventListener('click', function(event) {
         event.preventDefault();
 
         /* START: if single table don't have booked class */
-        if (!singleTable.classList.contains(classNames.booking.tableBooked)) {
+        if (!table.classList.contains(classNames.booking.tableBooked)) {
           /* toggle reservation class on single table */
-          singleTable.classList.toggle(classNames.booking.tableReservation);
-          thisBooking.reservedTable = parseInt(singleTable.getAttribute(settings.booking.tableIdAttribute));
+          table.classList.toggle(classNames.booking.tableReservation);
+          thisBooking.reservedTable = parseInt(table.getAttribute(settings.booking.tableIdAttribute));
         } else {
           alert('This table is already booked!');
         }
@@ -149,23 +149,23 @@ class Booking {
         const allReservedTables = document.querySelectorAll(select.booking.tablesReserved);
 
         /* START LOOP: for each single reserved table */
-        for (let singleReservedTable of allReservedTables) {
+        for (let reservedTable of allReservedTables) {
           /* START: if single reserved table isn't single table NOT reserved */
-          if (singleReservedTable !== singleTable) {
+          if (reservedTable !== table) {
             /* remove class reservation for single reserved table */
-            singleReservedTable.classList.remove(classNames.booking.tableReservation);
+            reservedTable.classList.remove(classNames.booking.tableReservation);
           }
         }
         /* updated event listener to hourpicker */
         thisBooking.dom.hourPicker.addEventListener('updated', function() {
           /* remove class reservation for table */
-          singleTable.classList.remove(classNames.booking.tableReservation);
+          table.classList.remove(classNames.booking.tableReservation);
         });
 
         /* change event listener to datepicker */
         thisBooking.dom.datePicker.addEventListener('change', function() {
           /* remove class reservation for table */
-          singleTable.classList.remove(classNames.booking.tableReservation);
+          table.classList.remove(classNames.booking.tableReservation);
         });
       });
     }
@@ -198,10 +198,11 @@ class Booking {
       hour: thisBooking.hourPicker.value,
       table: thisBooking.reservedTable,
       people: thisBooking.peopleAmount.value,
-      hours: thisBooking.hoursAmount.value,
+      duration: thisBooking.hoursAmount.value,
       phone: thisBooking.dom.phone.value,
       adress: thisBooking.dom.address.value,
-      starters: thisBooking.starters
+      starters: thisBooking.starters,
+      repeat: false
     };
 
     const options = {
