@@ -197,12 +197,11 @@ class Booking {
       date: thisBooking.datePicker.dom.input.value,
       hour: thisBooking.hourPicker.value,
       table: thisBooking.reservedTable,
-      people: thisBooking.peopleAmount.value,
+      ppl: thisBooking.peopleAmount.value,
       duration: thisBooking.hoursAmount.value,
       phone: thisBooking.dom.phone.value,
       adress: thisBooking.dom.address.value,
-      starters: thisBooking.starters,
-      repeat: false
+      starters: thisBooking.starters
     };
 
     const options = {
