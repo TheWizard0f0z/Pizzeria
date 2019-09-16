@@ -127,11 +127,8 @@ class Booking {
   makeReservation() {
     const thisBooking = this;
 
-    /* find all clickable tables (element that should react to clicking) */
-    const allTables = thisBooking.dom.tables;
-
     /* START LOOP: for each clickable single table */
-    for (let table of allTables) {
+    for (let table of thisBooking.dom.tables) {
       /* START: click event listener to single table */
       table.addEventListener('click', function(event) {
         event.preventDefault();
@@ -184,7 +181,13 @@ class Booking {
 
     thisBooking.dom.form.addEventListener('submit', function(event) {
       event.preventDefault();
-      thisBooking.sendReservation();
+      for (let table of thisBooking.dom.tables) {
+        if (!table.classList.contains(classNames.booking.tableReservation)) {
+          alert('Choose a free table!');
+        } else {
+          thisBooking.sendReservation();
+        }
+      }
     });
   }
 
@@ -219,6 +222,8 @@ class Booking {
       .then(function(parsedResponse) {
         console.log('parsedResponse', parsedResponse);
       });
+
+    thisBooking.makeBooked(payload.date, payload.hour, payload.duration, payload.table);
   }
 
   render(bookingElem) {
