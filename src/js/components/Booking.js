@@ -12,6 +12,62 @@ class Booking {
     thisBooking.initWidgets();
     thisBooking.getData();
     thisBooking.makeReservation();
+    thisBooking.initActions();
+  }
+
+  render(bookingElem) {
+    const thisBooking = this;
+
+    /* generate HTML based on template */
+    const generatedHTML = templates.bookingWidget();
+
+    /* create empty object thisBooking.dom */
+    thisBooking.dom = {};
+
+    /* add wrapper property to thisBooking.dom */
+    thisBooking.dom.wrapper = bookingElem;
+
+    /* change the content of the wrapper to HTML generated from the template */
+    bookingElem.innerHTML = generatedHTML;
+
+    /* save a single element found in the wrapper and matching the select.booking.peopleAmount selector in the thisBooking.dom.peopleAmount property */
+    thisBooking.dom.peopleAmount = thisBooking.dom.wrapper.querySelector(select.booking.peopleAmount);
+
+    /* save a single element found in the wrapper and matching the select.booking.hoursAmount selector in the thisBooking.dom.hoursAmount property */
+    thisBooking.dom.hoursAmount = thisBooking.dom.wrapper.querySelector(select.booking.hoursAmount);
+
+    /* save a single element found in the wrapper and matching the select.widgets.datePicker.wrapper selector in the thisBooking.dom.datePicker property */
+    thisBooking.dom.datePicker = thisBooking.dom.wrapper.querySelector(select.widgets.datePicker.wrapper);
+
+    /* save a single element found in the wrapper and matching the select.widgets.hourPicker.wrapper selector in the thisBooking.dom.hourPicker property */
+    thisBooking.dom.hourPicker = thisBooking.dom.wrapper.querySelector(select.widgets.hourPicker.wrapper);
+
+    /* save a multiple elements found in the wrapper and matching the select.booking.tables selector in the thisBooking.dom.tables property */
+    thisBooking.dom.tables = thisBooking.dom.wrapper.querySelectorAll(select.booking.tables);
+
+    thisBooking.dom.form = thisBooking.dom.wrapper.querySelector(select.booking.form);
+
+    thisBooking.dom.phone = thisBooking.dom.wrapper.querySelector(select.booking.phone);
+
+    thisBooking.dom.address = thisBooking.dom.wrapper.querySelector(select.booking.address);
+
+    thisBooking.dom.starters = thisBooking.dom.wrapper.querySelectorAll(select.booking.starters);
+  }
+
+  initWidgets() {
+    const thisBooking = this;
+
+    thisBooking.peopleAmount = new AmountWidget(thisBooking.dom.peopleAmount);
+
+    thisBooking.hoursAmount = new AmountWidget(thisBooking.dom.hoursAmount);
+
+    thisBooking.datePicker = new DatePicker(thisBooking.dom.datePicker);
+
+    thisBooking.hourPicker = new HourPicker(thisBooking.dom.hourPicker);
+
+    thisBooking.dom.wrapper.addEventListener('updated', function() {
+      thisBooking.updateDOM();
+    });
   }
 
   getData() {
@@ -139,7 +195,7 @@ class Booking {
           table.classList.toggle(classNames.booking.tableReservation);
           thisBooking.reservedTable = parseInt(table.getAttribute(settings.booking.tableIdAttribute));
         } else {
-          alert('This table is already booked!');
+          return alert('This table is already booked!');
         }
 
         /* find all tables with class 'reservation' */
@@ -153,17 +209,18 @@ class Booking {
             reservedTable.classList.remove(classNames.booking.tableReservation);
           }
         }
-        /* updated event listener to hourpicker */
-        thisBooking.dom.hourPicker.addEventListener('updated', function() {
-          /* remove class reservation for table */
-          table.classList.remove(classNames.booking.tableReservation);
-        });
+      });
 
-        /* change event listener to datepicker */
-        thisBooking.dom.datePicker.addEventListener('change', function() {
-          /* remove class reservation for table */
-          table.classList.remove(classNames.booking.tableReservation);
-        });
+      /* updated event listener to hourpicker */
+      thisBooking.dom.hourPicker.addEventListener('updated', function() {
+        /* remove class reservation for table */
+        table.classList.remove(classNames.booking.tableReservation);
+      });
+
+      /* change event listener to datepicker */
+      thisBooking.dom.datePicker.addEventListener('change', function() {
+        /* remove class reservation for table */
+        table.classList.remove(classNames.booking.tableReservation);
       });
     }
 
@@ -178,17 +235,6 @@ class Booking {
         }
       });
     }
-
-    thisBooking.dom.form.addEventListener('submit', function(event) {
-      event.preventDefault();
-      for (let table of thisBooking.dom.tables) {
-        if (!table.classList.contains(classNames.booking.tableReservation)) {
-          alert('Choose a free table!');
-        } else {
-          thisBooking.sendReservation();
-        }
-      }
-    });
   }
 
   sendReservation() {
@@ -221,63 +267,37 @@ class Booking {
       })
       .then(function(parsedResponse) {
         console.log('parsedResponse', parsedResponse);
+
+        thisBooking.getData();
       });
 
-    thisBooking.makeBooked(payload.date, payload.hour, payload.duration, payload.table);
+    return alert('Order accepted!');
   }
 
-  render(bookingElem) {
+  refreshTable() {
     const thisBooking = this;
 
-    /* generate HTML based on template */
-    const generatedHTML = templates.bookingWidget();
-
-    /* create empty object thisBooking.dom */
-    thisBooking.dom = {};
-
-    /* add wrapper property to thisBooking.dom */
-    thisBooking.dom.wrapper = bookingElem;
-
-    /* change the content of the wrapper to HTML generated from the template */
-    bookingElem.innerHTML = generatedHTML;
-
-    /* save a single element found in the wrapper and matching the select.booking.peopleAmount selector in the thisBooking.dom.peopleAmount property */
-    thisBooking.dom.peopleAmount = thisBooking.dom.wrapper.querySelector(select.booking.peopleAmount);
-
-    /* save a single element found in the wrapper and matching the select.booking.hoursAmount selector in the thisBooking.dom.hoursAmount property */
-    thisBooking.dom.hoursAmount = thisBooking.dom.wrapper.querySelector(select.booking.hoursAmount);
-
-    /* save a single element found in the wrapper and matching the select.widgets.datePicker.wrapper selector in the thisBooking.dom.datePicker property */
-    thisBooking.dom.datePicker = thisBooking.dom.wrapper.querySelector(select.widgets.datePicker.wrapper);
-
-    /* save a single element found in the wrapper and matching the select.widgets.hourPicker.wrapper selector in the thisBooking.dom.hourPicker property */
-    thisBooking.dom.hourPicker = thisBooking.dom.wrapper.querySelector(select.widgets.hourPicker.wrapper);
-
-    /* save a multiple elements found in the wrapper and matching the select.booking.tables selector in the thisBooking.dom.tables property */
-    thisBooking.dom.tables = thisBooking.dom.wrapper.querySelectorAll(select.booking.tables);
-
-    thisBooking.dom.form = thisBooking.dom.wrapper.querySelector(select.booking.form);
-
-    thisBooking.dom.phone = thisBooking.dom.wrapper.querySelector(select.booking.phone);
-
-    thisBooking.dom.address = thisBooking.dom.wrapper.querySelector(select.booking.address);
-
-    thisBooking.dom.starters = thisBooking.dom.wrapper.querySelectorAll(select.booking.starters);
+    for (let table of thisBooking.dom.tables) {
+      table.classList.remove(classNames.booking.tableReservation);
+    }
   }
 
-  initWidgets() {
+  initActions() {
     const thisBooking = this;
 
-    thisBooking.peopleAmount = new AmountWidget(thisBooking.dom.peopleAmount);
+    thisBooking.dom.form.addEventListener('submit', function(event) {
+      event.preventDefault();
 
-    thisBooking.hoursAmount = new AmountWidget(thisBooking.dom.hoursAmount);
+      if (!thisBooking.reservedTable) {
+        return alert('Choose a free table!');
+      } else if (!thisBooking.dom.phone.value) {
+        return alert('Enter Your phone number!');
+      } else if (!thisBooking.dom.address.value) {
+        return alert('Enter Your address!');
+      }
 
-    thisBooking.datePicker = new DatePicker(thisBooking.dom.datePicker);
-
-    thisBooking.hourPicker = new HourPicker(thisBooking.dom.hourPicker);
-
-    thisBooking.dom.wrapper.addEventListener('updated', function() {
-      thisBooking.updateDOM();
+      thisBooking.sendReservation();
+      thisBooking.refreshTable();
     });
   }
 }
