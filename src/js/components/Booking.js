@@ -267,7 +267,7 @@ class Booking {
       })
       .then(function(parsedResponse) {
         console.log('parsedResponse', parsedResponse);
-
+        thisBooking.reservedTable = undefined;
         thisBooking.getData();
       });
 
@@ -298,6 +298,7 @@ class Booking {
 
       thisBooking.sendReservation();
       thisBooking.refreshTable();
+      thisBooking.dom.form.reset();
     });
   }
 }
