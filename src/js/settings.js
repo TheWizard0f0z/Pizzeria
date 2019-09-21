@@ -63,7 +63,7 @@ export const select = {
     peopleAmount: '.people-amount',
     hoursAmount: '.hours-amount',
     tables: '.floor-plan .table',
-    tablesReserved: '.floor-plan .table.reservation',
+    tablesAlreadyReserved: '.floor-plan .table.reserved',
     form: '.booking-form',
     formSubmit: '.booking-form [type="submit"]',
     phone: '[name="phone"]',
@@ -86,7 +86,7 @@ export const classNames = {
   booking: {
     loading: 'loading',
     tableBooked: 'booked',
-    tableReservation: 'reservation'
+    tableReserved: 'reserved'
   },
   nav: {
     active: 'active'

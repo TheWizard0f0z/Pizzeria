@@ -96,12 +96,14 @@ ol.carousel-indicators li.active {
   top: 50%;
   transform: translateY(-50%);
 }
+
 .carousel-item {
   h4 {
     font-weight: $font-bold;
     font-family: $font-text;
     font-size: 14px;
   }
+
   p,
   i {
     font-family: $font-text;
@@ -144,6 +146,7 @@ ol.carousel-indicators li.active {
 
 footer {
   margin-bottom: 48px;
+
   a {
     color: $color-main;
     text-decoration: underline;

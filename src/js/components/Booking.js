@@ -10,66 +10,65 @@ class Booking {
 
     thisBooking.render(bookingElem);
     thisBooking.initWidgets();
-    thisBooking.getData();
-    thisBooking.makeReservation();
     thisBooking.initActions();
+    thisBooking.getData();
+    thisBooking.initReservation();
   }
 
-  render(bookingElem) {
+  render(wrapper) {
     const thisBooking = this;
 
-    /* generate HTML based on template */
     const generatedHTML = templates.bookingWidget();
 
-    /* create empty object thisBooking.dom */
     thisBooking.dom = {};
+    thisBooking.dom.wrapper = wrapper;
+    thisBooking.dom.wrapper.innerHTML = generatedHTML;
 
-    /* add wrapper property to thisBooking.dom */
-    thisBooking.dom.wrapper = bookingElem;
-
-    /* change the content of the wrapper to HTML generated from the template */
-    bookingElem.innerHTML = generatedHTML;
-
-    /* save a single element found in the wrapper and matching the select.booking.peopleAmount selector in the thisBooking.dom.peopleAmount property */
     thisBooking.dom.peopleAmount = thisBooking.dom.wrapper.querySelector(select.booking.peopleAmount);
-
-    /* save a single element found in the wrapper and matching the select.booking.hoursAmount selector in the thisBooking.dom.hoursAmount property */
     thisBooking.dom.hoursAmount = thisBooking.dom.wrapper.querySelector(select.booking.hoursAmount);
-
-    /* save a single element found in the wrapper and matching the select.widgets.datePicker.wrapper selector in the thisBooking.dom.datePicker property */
     thisBooking.dom.datePicker = thisBooking.dom.wrapper.querySelector(select.widgets.datePicker.wrapper);
-
-    /* save a single element found in the wrapper and matching the select.widgets.hourPicker.wrapper selector in the thisBooking.dom.hourPicker property */
     thisBooking.dom.hourPicker = thisBooking.dom.wrapper.querySelector(select.widgets.hourPicker.wrapper);
-
-    /* save a multiple elements found in the wrapper and matching the select.booking.tables selector in the thisBooking.dom.tables property */
     thisBooking.dom.tables = thisBooking.dom.wrapper.querySelectorAll(select.booking.tables);
 
-    thisBooking.dom.form = thisBooking.dom.wrapper.querySelector(select.booking.form);
-
     thisBooking.dom.phone = thisBooking.dom.wrapper.querySelector(select.booking.phone);
-
     thisBooking.dom.address = thisBooking.dom.wrapper.querySelector(select.booking.address);
-
     thisBooking.dom.starters = thisBooking.dom.wrapper.querySelectorAll(select.booking.starters);
+    thisBooking.dom.form = thisBooking.dom.wrapper.querySelector(select.booking.form);
+    thisBooking.dom.submitButton = thisBooking.dom.wrapper.querySelector(select.booking.formSubmit);
   }
 
   initWidgets() {
     const thisBooking = this;
 
     thisBooking.peopleAmount = new AmountWidget(thisBooking.dom.peopleAmount);
-
     thisBooking.hoursAmount = new AmountWidget(thisBooking.dom.hoursAmount);
-
     thisBooking.datePicker = new DatePicker(thisBooking.dom.datePicker);
-
     thisBooking.hourPicker = new HourPicker(thisBooking.dom.hourPicker);
 
     thisBooking.dom.wrapper.addEventListener('updated', function() {
       thisBooking.updateDOM();
     });
+
+    thisBooking.dom.hourPicker.addEventListener('updated', function() {
+      thisBooking.refreshTable();
+    });
+
+    thisBooking.dom.datePicker.addEventListener('change', function() {
+      thisBooking.refreshTable();
+    });
   }
 
+  initActions() {
+    const thisBooking = this;
+
+    thisBooking.dom.submitButton.addEventListener('click', function(event) {
+      event.preventDefault();
+
+      thisBooking.sendReservation();
+      thisBooking.refreshTable();
+      thisBooking.dom.form.reset();
+    });
+  }
   getData() {
     const thisBooking = this;
 
@@ -107,6 +106,7 @@ class Booking {
       });
   }
 
+  //
   parseData(bookings, eventsCurrent, eventsRepeat) {
     const thisBooking = this;
 
@@ -180,47 +180,27 @@ class Booking {
     }
   }
 
-  makeReservation() {
+  refreshTable() {
     const thisBooking = this;
 
-    /* START LOOP: for each clickable single table */
     for (let table of thisBooking.dom.tables) {
-      /* START: click event listener to single table */
-      table.addEventListener('click', function(event) {
-        event.preventDefault();
+      table.classList.remove(classNames.booking.tableReserved);
+    }
+  }
 
-        /* START: if single table don't have booked class */
+  initReservation() {
+    const thisBooking = this;
+
+    thisBooking.reservedTable = [];
+
+    for (let table of thisBooking.dom.tables) {
+      table.addEventListener('click', function() {
         if (!table.classList.contains(classNames.booking.tableBooked)) {
-          /* toggle reservation class on single table */
-          table.classList.toggle(classNames.booking.tableReservation);
-          thisBooking.reservedTable = parseInt(table.getAttribute(settings.booking.tableIdAttribute));
+          table.classList.toggle(classNames.booking.tableReserved);
+          thisBooking.reservedTable.push(table.getAttribute(settings.booking.tableIdAttribute));
         } else {
-          return alert('This table is already booked!');
+          thisBooking.reservedTable.splice(thisBooking.reservedTable.indexOf(table.getAttribute(settings.booking.tableIdAttribute)), 1);
         }
-
-        /* find all tables with class 'reservation' */
-        const allReservedTables = document.querySelectorAll(select.booking.tablesReserved);
-
-        /* START LOOP: for each single reserved table */
-        for (let reservedTable of allReservedTables) {
-          /* START: if single reserved table isn't single table NOT reserved */
-          if (reservedTable !== table) {
-            /* remove class reservation for single reserved table */
-            reservedTable.classList.remove(classNames.booking.tableReservation);
-          }
-        }
-      });
-
-      /* updated event listener to hourpicker */
-      thisBooking.dom.hourPicker.addEventListener('updated', function() {
-        /* remove class reservation for table */
-        table.classList.remove(classNames.booking.tableReservation);
-      });
-
-      /* change event listener to datepicker */
-      thisBooking.dom.datePicker.addEventListener('change', function() {
-        /* remove class reservation for table */
-        table.classList.remove(classNames.booking.tableReservation);
       });
     }
 
@@ -267,39 +247,9 @@ class Booking {
       })
       .then(function(parsedResponse) {
         console.log('parsedResponse', parsedResponse);
-        thisBooking.reservedTable = undefined;
+
         thisBooking.getData();
       });
-
-    return alert('Order accepted!');
-  }
-
-  refreshTable() {
-    const thisBooking = this;
-
-    for (let table of thisBooking.dom.tables) {
-      table.classList.remove(classNames.booking.tableReservation);
-    }
-  }
-
-  initActions() {
-    const thisBooking = this;
-
-    thisBooking.dom.form.addEventListener('submit', function(event) {
-      event.preventDefault();
-
-      if (!thisBooking.reservedTable) {
-        return alert('Choose a free table!');
-      } else if (!thisBooking.dom.phone.value) {
-        return alert('Enter Your phone number!');
-      } else if (!thisBooking.dom.address.value) {
-        return alert('Enter Your address!');
-      }
-
-      thisBooking.sendReservation();
-      thisBooking.refreshTable();
-      thisBooking.dom.form.reset();
-    });
   }
 }
 
