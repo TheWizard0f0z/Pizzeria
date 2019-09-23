@@ -63,7 +63,7 @@ export const select = {
     peopleAmount: '.people-amount',
     hoursAmount: '.hours-amount',
     tables: '.floor-plan .table',
-    tablesAlreadyReserved: '.floor-plan .table.reserved',
+    tablesSelected: '.floor-plan .table.reserved',
     form: '.booking-form',
     formSubmit: '.booking-form [type="submit"]',
     phone: '[name="phone"]',

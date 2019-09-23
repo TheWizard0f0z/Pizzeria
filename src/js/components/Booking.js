@@ -29,6 +29,7 @@ class Booking {
     thisBooking.dom.datePicker = thisBooking.dom.wrapper.querySelector(select.widgets.datePicker.wrapper);
     thisBooking.dom.hourPicker = thisBooking.dom.wrapper.querySelector(select.widgets.hourPicker.wrapper);
     thisBooking.dom.tables = thisBooking.dom.wrapper.querySelectorAll(select.booking.tables);
+    thisBooking.dom.tablesSelected = thisBooking.dom.wrapper.querySelector(select.booking.tablesSelected);
 
     thisBooking.dom.phone = thisBooking.dom.wrapper.querySelector(select.booking.phone);
     thisBooking.dom.address = thisBooking.dom.wrapper.querySelector(select.booking.address);
@@ -106,7 +107,6 @@ class Booking {
       });
   }
 
-  //
   parseData(bookings, eventsCurrent, eventsRepeat) {
     const thisBooking = this;
 
@@ -146,11 +146,21 @@ class Booking {
     const startHour = utils.hourToNumber(hour);
 
     for (let hourBlock = startHour; hourBlock < startHour + duration; hourBlock += 0.5) {
+      // jeśli nie ma wpisu dla konkretnej daty
       if (typeof thisBooking.booked[date][hourBlock] == 'undefined') {
+        // stwórz pustą tablicę
         thisBooking.booked[date][hourBlock] = [];
       }
-
-      thisBooking.booked[date][hourBlock].push(table);
+      // jeśli obiekt 'table' nie jest tablicą
+      if (!Array.isArray(table)) {
+        //  dodaj nowy element 'table'
+        thisBooking.booked[date][hourBlock].push(table);
+      }
+      // jeśli obiekt 'table' jest tablicą
+      if (Array.isArray(table)) {
+        // zwróć tablicę w której będzie dodana tablica zawierająca 'table'
+        thisBooking.booked[date][hourBlock] = thisBooking.booked[date][hourBlock].concat(table);
+      }
     }
   }
 
@@ -197,7 +207,7 @@ class Booking {
       table.addEventListener('click', function() {
         if (!table.classList.contains(classNames.booking.tableBooked)) {
           table.classList.toggle(classNames.booking.tableReserved);
-          thisBooking.reservedTable.push(table.getAttribute(settings.booking.tableIdAttribute));
+          thisBooking.reservedTable.push(parseInt(table.getAttribute(settings.booking.tableIdAttribute)));
         } else {
           thisBooking.reservedTable.splice(thisBooking.reservedTable.indexOf(table.getAttribute(settings.booking.tableIdAttribute)), 1);
         }
@@ -223,7 +233,7 @@ class Booking {
     const url = settings.db.url + '/' + settings.db.booking;
 
     const payload = {
-      date: thisBooking.datePicker.dom.input.value,
+      date: thisBooking.date,
       hour: thisBooking.hourPicker.value,
       table: thisBooking.reservedTable,
       ppl: thisBooking.peopleAmount.value,
