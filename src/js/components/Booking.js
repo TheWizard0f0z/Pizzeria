@@ -65,6 +65,16 @@ class Booking {
     thisBooking.dom.submitButton.addEventListener('click', function(event) {
       event.preventDefault();
 
+      if (!thisBooking.datePicker.dom.input.value) {
+        return alert('Select reservation day');
+      } else if (!thisBooking.selectedTable) {
+        return alert('Choose a free table!');
+      } else if (!thisBooking.dom.phone.value) {
+        return alert('Enter Your phone number!');
+      } else if (!thisBooking.dom.address.value) {
+        return alert('Enter Your address!');
+      }
+
       thisBooking.sendReservation();
       thisBooking.refreshTable();
       thisBooking.dom.form.reset();
@@ -194,22 +204,22 @@ class Booking {
     const thisBooking = this;
 
     for (let table of thisBooking.dom.tables) {
-      table.classList.remove(classNames.booking.tableReserved);
+      table.classList.remove(classNames.booking.tableSelected);
     }
   }
 
   initReservation() {
     const thisBooking = this;
 
-    thisBooking.reservedTable = [];
+    thisBooking.selectedTable = [];
 
     for (let table of thisBooking.dom.tables) {
       table.addEventListener('click', function() {
         if (!table.classList.contains(classNames.booking.tableBooked)) {
-          table.classList.toggle(classNames.booking.tableReserved);
-          thisBooking.reservedTable.push(parseInt(table.getAttribute(settings.booking.tableIdAttribute)));
+          table.classList.toggle(classNames.booking.tableSelected);
+          thisBooking.selectedTable.push(parseInt(table.getAttribute(settings.booking.tableIdAttribute)));
         } else {
-          thisBooking.reservedTable.splice(thisBooking.reservedTable.indexOf(table.getAttribute(settings.booking.tableIdAttribute)), 1);
+          thisBooking.selectedTable.splice(thisBooking.selectedTable.indexOf(table.getAttribute(settings.booking.tableIdAttribute)), 1);
         }
       });
     }
@@ -231,6 +241,8 @@ class Booking {
     const thisBooking = this;
 
     const url = settings.db.url + '/' + settings.db.booking;
+
+    thisBooking.reservedTable = [...new Set(thisBooking.selectedTable)];
 
     const payload = {
       date: thisBooking.date,
@@ -258,6 +270,7 @@ class Booking {
       .then(function(parsedResponse) {
         console.log('parsedResponse', parsedResponse);
 
+        thisBooking.selectedTable = [];
         thisBooking.getData();
       });
   }
